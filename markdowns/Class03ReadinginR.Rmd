@@ -1,0 +1,51 @@
+---
+title: 'Class 03: Reading Data in R'
+author: "Paige Charlton"
+date: "2026-02-04"
+output: html_document:
+  toc: TRUE
+  toc_float: TRUE
+  number_sections: TRUE
+  code_downlaod: TRUE 
+  code_folding: SHOW
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##Readind Data from CSVS
+
+##Locally from my PC
+
+In R, there are some differences from how running code and RMarkdown behave in terms of how they consider paths for files
+
+  - **R Markdown** The relative path is based ointhe location of the rR markdown file **This is true for when you knit the file.**
+  -**Run code line-by-line** The path is based on the project directory (assuming that you are working in a project).
+  
+  To alleviate any issues, when we are working from an RMarkdown, we will also set the working directory to the markdown file location/folder.
+  
+  
+## JSON Data
+
+```{r cincy_jobs}
+cincy_jobs = jsonlite::fromJSON(
+  txt = 'https://www.themuse.com/api/public/jobs?page=1&location=Cincinnati%2C%20OH',
+  flatten = TRUE
+)
+
+names(cincy_jobs)
+
+
+cincy_jobs_df = cincy_jobs[['results']]
+
+dplyr::glimpse(cincy_jobs_df)
+
+cincy_jobs_df2 = cincy_jobs_df |>
+  tidyr::unnest(
+    cols = c('locations'), names_repair = "unique"
+  )
+
+```
+
